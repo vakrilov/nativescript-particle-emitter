@@ -1,6 +1,20 @@
-<Page xmlns="http://schemas.nativescript.org/tns.xsd" loaded="pageLoaded" class="page"
-  xmlns:ui="nativescript-particle-emitter">
-  <StackLayout class="p-20">
-    <Label text="{{ message }}" class="t-20 text-center c-black" textWrap="true"/>
-  </StackLayout>
+<Page xmlns="http://schemas.nativescript.org/tns.xsd"
+  class="page" loaded="onLoaded"
+  xmlns:pe="nativescript-particle-emitter">
+  <GridLayout class="p-20" backgroundColor="lightgreen">
+    <GridLayout backgroundColor="lightblue">
+
+      <pe:ParticleEmitter backgroundColor="white" margin="40" height="300" width="300" tap="toggleEmit">
+
+      </pe:ParticleEmitter>
+    
+
+    </GridLayout>
+
+    <StackLayout horizontalAlignment="right" verticalAlignment="bottom">
+        <Label text="{{fps}}" fontSize="8" />
+        <Label text="{{minfps}}" fontSize="8" />
+    </StackLayout>
+    
+  </GridLayout>
 </Page>
