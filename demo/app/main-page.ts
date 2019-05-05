@@ -14,10 +14,12 @@ export function onLoaded(args) {
     page.bindingContext.set("x", 100);
     page.bindingContext.set("y", 200);
     page.bindingContext.set("isEmitting", false);
+    page.bindingContext.set("showDebugElement", true);
     page.bindingContext.set("areaWidth", 25);
     page.bindingContext.set("areaHeight", 25);
+    page.bindingContext.set("emitBatch", 1);
     page.bindingContext.set("duration", 1000);
-
+    page.bindingContext.set("interval", 50);
 
     addCallback((fps, minFps) => {
         page.bindingContext.set("fps", "FPS: " + fps.toFixed(2));

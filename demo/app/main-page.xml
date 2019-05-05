@@ -14,34 +14,50 @@
       </StackLayout>
 
       <StackLayout orientation="horizontal">
-        <Label text="width" />
+        <Label text="duration" />
+        <Slider minValue="300" maxValue="1500" value="{{ duration }}" width="100" />
+      </StackLayout>
+
+      <StackLayout orientation="horizontal">
+        <Label text="areaWidth" />
         <Slider minValue="1" maxValue="200" value="{{ areaWidth }}" width="100" />
       </StackLayout>
       
       <StackLayout orientation="horizontal">
-        <Label text="height" />
+        <Label text="areaHeight" />
         <Slider minValue="1" maxValue="200" value="{{ areaHeight }}"  width="100"/>
       </StackLayout>
 
+      <StackLayout orientation="horizontal">
+        <Label text="emitBatch" />
+        <Slider minValue="1" maxValue="5" value="{{ emitBatch }}"  width="100"/>
+      </StackLayout>
+
+      <StackLayout orientation="horizontal">
+        <Label text="interval" />
+        <Slider minValue="30" maxValue="500" value="{{ interval }}"  width="100"/>
+      </StackLayout>
     </StackLayout>
 
-    <StackLayout horizontalAlignment="right" verticalAlignment="bottom" tap="resetFps">
-        <Label text="{{ fps }}" fontSize="10" />
-        <Label text="{{ minfps }}" fontSize="10" />
-    </StackLayout>
-    
 
     <pe:ParticleEmitter id="pe" backgroundColor="white" 
-      margin="20" height="300" width="300" 
+      verticalAlignment="bottom"
+      margin="10" height="300" width="100%" 
       touch="onTouch" showDebugElement="{{ showDebugElement }}"
       isEmitting="{{ isEmitting }}"
       x="{{x}}" y="{{y}}" 
       duration="{{ duration }}"
       areaWidth="{{ areaWidth }}"
       areaHeight="{{ areaHeight }}"
-      
-      >
+      emitBatch="{{ emitBatch }}" 
+      interval="{{ interval }}"  />
 
-    </pe:ParticleEmitter>
+
+
+    <StackLayout horizontalAlignment="right" verticalAlignment="bottom" tap="resetFps" margin="10">
+        <Label text="{{ fps }}" fontSize="10" />
+        <Label text="{{ minfps }}" fontSize="10" />
+    </StackLayout>
+    
   </GridLayout>
 </Page>

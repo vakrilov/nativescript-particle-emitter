@@ -5,11 +5,9 @@ import { AnimationDefinition } from 'tns-core-modules/ui/animation';
 import { Label } from 'tns-core-modules/ui/label';
 import { Property } from "tns-core-modules/ui/core/properties";
 
-const D = 10;
-const INTERVAL = 10;
+const SIZE = 10;
 const CURVE = "easeOut";
 const isLogEnabled = false;
-
 
 class Particle extends Label {
 
@@ -26,9 +24,11 @@ export class ParticleEmitter extends AbsoluteLayout {
 
   public x: number;
   public y: number;
+  public interval: number;
   public areaWidth: number;
   public areaHeight: number;
   public duration: number;
+  public emitBatch: number;
   public showDebugElement: boolean;
 
   private particlePool: Particle[] = [];
@@ -64,9 +64,9 @@ export class ParticleEmitter extends AbsoluteLayout {
     log("createParticle");
 
     const particle = new Particle();
-    particle.width = D;
-    particle.height = D;
-    particle.borderRadius = D / 2;
+    particle.width = SIZE;
+    particle.height = SIZE;
+    particle.borderRadius = SIZE / 2;
     particle.visibility = "hidden";
     particle.backgroundColor = "blue";
     this.addChild(particle);
@@ -94,16 +94,20 @@ export class ParticleEmitter extends AbsoluteLayout {
   }
 
   releaseParticle(p: Particle) {
-    log("releaseParticle");
-
     p.visibility = "hidden";
-    this.particlePool.push(p);
+
+    setTimeout(() => {
+      log("releaseParticle");
+
+      this.particlePool.push(p);
+    }, 5);
+
   }
 
   public emitParticle() {
     const p = this.getParticle();
-    const x = this.x - D / 2;
-    const y = this.y - D / 2;
+    const x = randRange(this.x - this.areaWidth / 2, this.x + this.areaWidth / 2) - SIZE / 2;
+    const y = randRange(this.y - this.areaHeight / 2, this.y + this.areaHeight / 2) - SIZE / 2;
 
     this.prepareParticle(p, x, y);
 
@@ -123,20 +127,28 @@ export class ParticleEmitter extends AbsoluteLayout {
 
   private start() {
     this.timerId = setInterval(() => {
-      this.emitParticle();
-    }, INTERVAL);
+      for (let i = 0; i < this.emitBatch; i++) {
+        this.emitParticle();
+      }
+    }, this.interval);
     log("Emitter -> started");
   }
 
   private stop() {
     clearInterval(this.timerId);
-    this.isEmitting = false;
     this.timerId = undefined;
     log("Emitter -> stopped");
   }
 
   public IsEmittingChanged() {
     this.isEmitting ? this.start() : this.stop();
+  }
+
+  public intervalChanged() {
+    if (this.isEmitting) {
+      this.stop();
+      this.start();
+    }
   }
 
   _update() {
@@ -153,6 +165,9 @@ export class ParticleEmitter extends AbsoluteLayout {
     }
   }
 }
+function randRange(min: number, max: number) {
+  return min + Math.random() * (max - min);
+}
 
 function update(pe: ParticleEmitter, newValue: any, oldValue: any) {
   // console.log("update", newValue);
@@ -166,6 +181,21 @@ export const isEmittingProperty = new Property<ParticleEmitter, boolean>({
   valueChanged: (pe) => pe.IsEmittingChanged()
 });
 isEmittingProperty.register(ParticleEmitter);
+
+export const emitBatchProperty = new Property<ParticleEmitter, number>({
+  name: "emitBatch",
+  defaultValue: 1,
+  valueConverter: parseInt
+});
+emitBatchProperty.register(ParticleEmitter);
+
+export const intervalProperty = new Property<ParticleEmitter, number>({
+  name: "interval",
+  defaultValue: 50,
+  valueConverter: parseInt,
+  valueChanged: (pe) => pe.intervalChanged()
+});
+intervalProperty.register(ParticleEmitter);
 
 export const xProperty = new Property<ParticleEmitter, number>({
   name: "x",
