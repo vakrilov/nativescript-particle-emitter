@@ -25,17 +25,37 @@
       
       <StackLayout orientation="horizontal">
         <Label text="areaHeight" />
-        <Slider minValue="1" maxValue="200" value="{{ areaHeight }}"  width="100"/>
+        <Slider minValue="1" maxValue="200" value="{{ areaHeight }}" width="100"/>
       </StackLayout>
 
       <StackLayout orientation="horizontal">
         <Label text="emitBatch" />
-        <Slider minValue="1" maxValue="5" value="{{ emitBatch }}"  width="100"/>
+        <Slider minValue="1" maxValue="5" value="{{ emitBatch }}" width="100"/>
       </StackLayout>
 
       <StackLayout orientation="horizontal">
         <Label text="interval" />
-        <Slider minValue="30" maxValue="500" value="{{ interval }}"  width="100"/>
+        <Slider minValue="30" maxValue="500" value="{{ interval }}" width="100"/>
+      </StackLayout>
+
+      <StackLayout orientation="horizontal">
+        <Label text="velocity" />
+        <Slider minValue="20" maxValue="200" value="{{ velocity }}" width="100"/>
+      </StackLayout>
+
+      <StackLayout orientation="horizontal">
+        <Label text="velocityVariation" />
+        <Slider minValue="0" maxValue="50" value="{{ velocityVariation }}" width="100"/>
+      </StackLayout>
+
+      <StackLayout orientation="horizontal">
+        <Label text="emitDirection" />
+        <Slider minValue="0" maxValue="360" value="{{ emitDirection }}" width="100"/>
+      </StackLayout>
+
+      <StackLayout orientation="horizontal">
+        <Label text="emitDirectionVariation" />
+        <Slider minValue="0" maxValue="180" value="{{ emitDirectionVariation }}" width="100"/>
       </StackLayout>
     </StackLayout>
 
@@ -50,9 +70,11 @@
       areaWidth="{{ areaWidth }}"
       areaHeight="{{ areaHeight }}"
       emitBatch="{{ emitBatch }}" 
-      interval="{{ interval }}"  />
-
-
+      interval="{{ interval }}"  
+      velocity="{{ velocity }}"  
+      velocityVariation="{{ velocityVariation }}"  
+      emitDirection="{{ emitDirection }}"  
+      emitDirectionVariation="{{ emitDirectionVariation }}" />
 
     <StackLayout horizontalAlignment="right" verticalAlignment="bottom" tap="resetFps" margin="10">
         <Label text="{{ fps }}" fontSize="10" />

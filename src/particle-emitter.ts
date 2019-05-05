@@ -31,22 +31,56 @@ export class ParticleEmitter extends AbsoluteLayout {
   public emitBatch: number;
   public showDebugElement: boolean;
 
+  public velocity: number;
+  public velocityVariation: number;
+  public emitDirection: number;
+  public emitDirectionVariation: number;
+
   private particlePool: Particle[] = [];
   private timerId;
-  private debugElement: Label;
+
+  private emitBoxDebug: View;
+  private emitDirectionMinDebug: View;
+  private emitDirectionMaxDebug: View;
+  private emitAngleStartDebug: View;
+  private emitAngleEndDebug: View;
 
   constructor() {
     super();
     this.clipToBounds = false;
 
-    this.debugElement = new Label();
-    this.debugElement.borderColor = "black";
-    this.debugElement.borderWidth = 1;
-    this.debugElement.style.zIndex = 100;
-    this.debugElement.width = 2;
-    this.debugElement.height = 2;
+    this.createDebugElements();
+  }
 
-    this.addChild(this.debugElement);
+  private createDebugElements() {
+    this.emitBoxDebug = new Label();
+    this.emitBoxDebug.borderColor = "black";
+    this.emitBoxDebug.borderWidth = 1;
+    this.emitBoxDebug.style.zIndex = 100;
+    this.emitBoxDebug.width = 2;
+    this.emitBoxDebug.height = 2;
+
+    this.emitDirectionMaxDebug = this.createDebugLine("orange");
+    this.emitDirectionMinDebug = this.createDebugLine("red");
+    this.emitAngleStartDebug = this.createDebugLine("green");
+    this.emitAngleEndDebug = this.createDebugLine("green");
+
+    this.addChild(this.emitBoxDebug);
+    this.addChild(this.emitAngleStartDebug);
+    this.addChild(this.emitAngleEndDebug);
+    this.addChild(this.emitDirectionMaxDebug);
+    this.addChild(this.emitDirectionMinDebug);
+  }
+
+  private createDebugLine(color: string): View {
+    const line = new Label();
+    line.backgroundColor = color;
+    line.style.zIndex = 100;
+    line.width = 1;
+    line.height = 1;
+    line.originX = 0;
+    line.originY = 0.5;
+    return line;
   }
 
   public createNativeView() {
@@ -106,13 +140,18 @@ export class ParticleEmitter extends AbsoluteLayout {
 
   public emitParticle() {
     const p = this.getParticle();
+
+    // Get origin coordinates in the box
     const x = randRange(this.x - this.areaWidth / 2, this.x + this.areaWidth / 2) - SIZE / 2;
     const y = randRange(this.y - this.areaHeight / 2, this.y + this.areaHeight / 2) - SIZE / 2;
 
     this.prepareParticle(p, x, y);
 
-    const dx = x + Math.random() * 150 - 75;
-    const dy = y + Math.random() * 150 - 75;
+    const vel = randRange(this.velocity - this.velocityVariation, this.velocity + this.velocityVariation);
+    const angle = randRange(this.emitDirection - this.emitDirectionVariation, this.emitDirection + this.emitDirectionVariation);
+    const angleRad = angle / 180 * Math.PI;
+    const dx = x + Math.cos(angleRad) * vel;
+    const dy = y - Math.sin(angleRad) * vel;
 
     p.animate({
       translate: { x: dx, y: dy },
@@ -151,17 +190,58 @@ export class ParticleEmitter extends AbsoluteLayout {
     }
   }
 
-  _update() {
+  updateDebugElements() {
+    this.updateDE(
+      this.emitBoxDebug,
+      this.x - this.areaWidth / 2 - 1,
+      this.y - this.areaHeight / 2 - 1,
+      this.areaWidth + 2,
+      this.areaHeight + 2
+    );
+
+    this.updateDE(
+      this.emitDirectionMinDebug,
+      this.x,
+      this.y,
+      this.velocity - this.velocityVariation,
+      1,
+      -this.emitDirection);
+
+    this.updateDE(
+      this.emitDirectionMaxDebug,
+      this.x,
+      this.y,
+      this.velocity + this.velocityVariation,
+      1,
+      -this.emitDirection);
+
+    this.updateDE(
+      this.emitAngleStartDebug,
+      this.x,
+      this.y,
+      this.velocity,
+      1,
+      -this.emitDirection - this.emitDirectionVariation);
+
+    this.updateDE(
+      this.emitAngleEndDebug,
+      this.x,
+      this.y,
+      this.velocity,
+      1,
+      -this.emitDirection + this.emitDirectionVariation);
+  }
+
+  private updateDE(de: View, left: number, top: number, width: number, height: number, rotate: number = 0) {
     if (this.showDebugElement) {
-      this.debugElement.visibility = "visible";
-
-      this.debugElement.width = this.areaWidth + 2;
-      this.debugElement.height = this.areaHeight + 2;
-      this.debugElement.left = this.x - this.areaWidth / 2 - 1;
-      this.debugElement.top = this.y - this.areaHeight / 2 - 1;
-
+      de.visibility = "visible";
+      de.left = left;
+      de.top = top;
+      de.width = width;
+      de.height = height;
+      de.rotate = rotate;
     } else {
-      this.debugElement.visibility = "collapse";
+      de.visibility = "collapse";
     }
   }
 }
@@ -170,8 +250,7 @@ function randRange(min: number, max: number) {
 }
 
 function update(pe: ParticleEmitter, newValue: any, oldValue: any) {
-  // console.log("update", newValue);
-  pe._update();
+  pe.updateDebugElements();
 }
 
 export const isEmittingProperty = new Property<ParticleEmitter, boolean>({
@@ -245,3 +324,36 @@ export const durationProperty = new Property<ParticleEmitter, number>({
   valueChanged: update
 });
 durationProperty.register(ParticleEmitter);
+
+export const velocityProperty = new Property<ParticleEmitter, number>({
+  name: "velocity",
+  defaultValue: 80,
+  valueConverter: parseInt,
+  valueChanged: update
+});
+velocityProperty.register(ParticleEmitter);
+
+export const velocityVariationProperty = new Property<ParticleEmitter, number>({
+  name: "velocityVariation",
+  defaultValue: 40,
+  valueConverter: parseInt,
+  valueChanged: update
+});
+velocityVariationProperty.register(ParticleEmitter);
+
+export const emitDirectionProperty = new Property<ParticleEmitter, number>({
+  name: "emitDirection",
+  defaultValue: 90,
+  valueConverter: parseInt,
+  valueChanged: update
+});
+emitDirectionProperty.register(ParticleEmitter);
+
+export const emitDirectionVariationProperty = new Property<ParticleEmitter, number>({
+  name: "emitDirectionVariation",
+  defaultValue: 180,
+  valueConverter: parseInt,
+  valueChanged: update
+});
+emitDirectionVariationProperty.register(ParticleEmitter);
+
