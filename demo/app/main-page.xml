@@ -2,19 +2,46 @@
   class="page" loaded="onLoaded"
   xmlns:pe="nativescript-particle-emitter">
   <GridLayout class="p-20" backgroundColor="lightgreen">
-    <GridLayout backgroundColor="lightblue">
+    <StackLayout verticalAlignment="top">
+      <StackLayout orientation="horizontal">
+        <Label text="emitting" />
+        <Switch checked="{{ isEmitting }}" />
+      </StackLayout>
 
-      <pe:ParticleEmitter backgroundColor="white" margin="40" height="300" width="300" tap="toggleEmit">
+      <StackLayout orientation="horizontal">
+        <Label text="debug" textWrap="true" />
+        <Switch checked="{{ showDebugElement }}" />
+      </StackLayout>
 
-      </pe:ParticleEmitter>
-    
+      <StackLayout orientation="horizontal">
+        <Label text="width" />
+        <Slider minValue="1" maxValue="200" value="{{ areaWidth }}" width="100" />
+      </StackLayout>
+      
+      <StackLayout orientation="horizontal">
+        <Label text="height" />
+        <Slider minValue="1" maxValue="200" value="{{ areaHeight }}"  width="100"/>
+      </StackLayout>
 
-    </GridLayout>
+    </StackLayout>
 
-    <StackLayout horizontalAlignment="right" verticalAlignment="bottom">
-        <Label text="{{fps}}" fontSize="8" />
-        <Label text="{{minfps}}" fontSize="8" />
+    <StackLayout horizontalAlignment="right" verticalAlignment="bottom" tap="resetFps">
+        <Label text="{{ fps }}" fontSize="10" />
+        <Label text="{{ minfps }}" fontSize="10" />
     </StackLayout>
     
+
+    <pe:ParticleEmitter id="pe" backgroundColor="white" 
+      margin="20" height="300" width="300" 
+      touch="onTouch" showDebugElement="{{ showDebugElement }}"
+      isEmitting="{{ isEmitting }}"
+      x="{{x}}" y="{{y}}" 
+      duration="{{ duration }}"
+      areaWidth="{{ areaWidth }}"
+      areaHeight="{{ areaHeight }}"
+      
+      >
+
+    </pe:ParticleEmitter>
   </GridLayout>
 </Page>

@@ -5,6 +5,11 @@ purpose of the file is to pass control to the app’s first module.
 */
 
 import * as app from "tns-core-modules/application";
+import { enable , setCategories, categories, addCategories} from "tns-core-modules/trace/trace";
+
+// addCategories(categories.NativeLifecycle);
+// addCategories(categories.Layout);
+// enable();
 
 app.run({ moduleName: "app-root" });
 
