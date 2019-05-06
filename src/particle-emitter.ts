@@ -3,14 +3,10 @@ import { isAndroid } from 'tns-core-modules/platform';
 import { View, booleanConverter, Color } from 'tns-core-modules/ui/core/view';
 import { Label } from 'tns-core-modules/ui/label';
 import { Property } from "tns-core-modules/ui/core/properties";
+import { Particle, SIZE } from "./particle";
 
-const SIZE = 10;
 const CURVE = "easeOut";
 const isLogEnabled = false;
-
-class Particle extends Label {
-
-}
 
 function log(...args) {
   if (isLogEnabled) {
@@ -99,10 +95,10 @@ export class ParticleEmitter extends AbsoluteLayout {
     log("createParticle");
 
     const particle = new Particle();
-    particle.width = SIZE;
-    particle.height = SIZE;
-    particle.borderRadius = SIZE / 2;
-    particle.visibility = "hidden";
+    // particle.width = SIZE;
+    // particle.height = SIZE;
+    // particle.borderRadius = SIZE / 2;
+    // particle.visibility = "hidden";
     this.addChild(particle);
 
     return particle;
@@ -112,7 +108,7 @@ export class ParticleEmitter extends AbsoluteLayout {
     p.opacity = 1;
     p.scaleX = 1;
     p.scaleY = 1;
-    p.visibility = "visible";
+    // p.visibility = "visible";
   }
 
   getParticle(): Particle {
@@ -126,13 +122,15 @@ export class ParticleEmitter extends AbsoluteLayout {
   }
 
   releaseParticle(p: Particle) {
-    p.visibility = "hidden";
+    p.hide();
 
-    setTimeout(() => {
+    // p.visibility = "hidden";
+
+    // setTimeout(() => {
       log("releaseParticle");
 
       this.particlePool.push(p);
-    }, 5);
+    // }, 5);
 
   }
 
@@ -147,6 +145,8 @@ export class ParticleEmitter extends AbsoluteLayout {
 
     p.translateX = x;
     p.translateY = y;
+    p.scaleX = 0.2;
+    p.scaleY = 0.2;
     p.backgroundColor = this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
 
     const vel = randRange(this.velocity - this.velocityVariation, this.velocity + this.velocityVariation);
@@ -155,9 +155,11 @@ export class ParticleEmitter extends AbsoluteLayout {
     const dx = x + Math.cos(angleRad) * vel;
     const dy = y - Math.sin(angleRad) * vel;
 
+    p.show();
+
     p.animate({
       translate: { x: dx, y: dy },
-      scale: { x: 5, y: 5 },
+      scale: { x: 1, y: 1 },
       opacity: 0,
       duration: this.duration,
       curve: CURVE,

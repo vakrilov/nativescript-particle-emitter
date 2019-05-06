@@ -14,7 +14,7 @@ const palettes = [
     [new Color("#D996D4"), new Color("#A465BF"), new Color("#1A2A40"), new Color("#D97652"), new Color("#A64949")],
     [new Color("blue")],
     [new Color("red"), new Color("green"), new Color("blue")],
-]
+];
 
 let page: Page;
 export function onLoaded(args) {
@@ -37,7 +37,7 @@ export function onLoaded(args) {
     page.bindingContext.set("emitDirection", 0);
     page.bindingContext.set("emitDirectionVariation", 180);
 
-    selectNextpalette();
+    selectNextPalette();
 
     addCallback((fps, minFps) => {
         page.bindingContext.set("fps", "FPS: " + fps.toFixed(2));
@@ -67,7 +67,16 @@ export function onTouch(args: TouchGestureEventData) {
     }
 }
 
-export function selectNextpalette() {
+export function selectNextPalette() {
     paletteIndex = (paletteIndex + 1) % palettes.length;
     page.bindingContext.set("colorPalette", palettes[paletteIndex])
+}
+
+export function loadTest() {
+    page.bindingContext.set("interval", 30);
+    page.bindingContext.set("emitBatch", 5);
+    page.bindingContext.set("duration", 1500);
+    page.bindingContext.set("showDebugElement", false);
+    page.bindingContext.set("isEmitting", true);
+    setTimeout(resetFps, 2000);
 }

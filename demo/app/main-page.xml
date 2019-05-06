@@ -1,7 +1,13 @@
 <Page xmlns="http://schemas.nativescript.org/tns.xsd"
   class="page" loaded="onLoaded"
   xmlns:pe="nativescript-particle-emitter">
-  <GridLayout class="p-20" backgroundColor="lightgreen">
+  <GridLayout class="p-20" columns="2* *" backgroundColor="lightgreen">
+    <StackLayout col="1">
+      <Button text="change colors" tap="selectNextPalette" />
+      <Button text="load test" tap="loadTest" />
+        
+    </StackLayout>
+
     <StackLayout verticalAlignment="top">
       <StackLayout orientation="horizontal">
         <Label text="emitting" />
@@ -58,12 +64,11 @@
         <Slider minValue="0" maxValue="180" value="{{ emitDirectionVariation }}" width="100"/>
       </StackLayout>
 
-      <Button text="change colors" tap="selectNextpalette" />
       
     </StackLayout>
 
 
-    <pe:ParticleEmitter id="pe" backgroundColor="white" 
+    <pe:ParticleEmitter id="pe" backgroundColor="white" colSpan="2"
       verticalAlignment="bottom"
       margin="10" height="300" width="100%" 
       touch="onTouch" showDebugElement="{{ showDebugElement }}"
