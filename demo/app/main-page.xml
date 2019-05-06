@@ -57,6 +57,9 @@
         <Label text="emitDirectionVariation" />
         <Slider minValue="0" maxValue="180" value="{{ emitDirectionVariation }}" width="100"/>
       </StackLayout>
+
+      <Button text="change colors" tap="selectNextpalette" />
+      
     </StackLayout>
 
 
@@ -74,7 +77,9 @@
       velocity="{{ velocity }}"  
       velocityVariation="{{ velocityVariation }}"  
       emitDirection="{{ emitDirection }}"  
-      emitDirectionVariation="{{ emitDirectionVariation }}" />
+      emitDirectionVariation="{{ emitDirectionVariation }}" 
+      colorPalette="{{ colorPalette }}"
+      />
 
     <StackLayout horizontalAlignment="right" verticalAlignment="bottom" tap="resetFps" margin="10">
         <Label text="{{ fps }}" fontSize="10" />

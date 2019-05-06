@@ -1,7 +1,6 @@
 import { AbsoluteLayout } from 'tns-core-modules/ui/layouts/absolute-layout';
 import { isAndroid } from 'tns-core-modules/platform';
-import { View, booleanConverter } from 'tns-core-modules/ui/core/view';
-import { AnimationDefinition } from 'tns-core-modules/ui/animation';
+import { View, booleanConverter, Color } from 'tns-core-modules/ui/core/view';
 import { Label } from 'tns-core-modules/ui/label';
 import { Property } from "tns-core-modules/ui/core/properties";
 
@@ -35,6 +34,8 @@ export class ParticleEmitter extends AbsoluteLayout {
   public velocityVariation: number;
   public emitDirection: number;
   public emitDirectionVariation: number;
+
+  public colorPalette: Color[];
 
   private particlePool: Particle[] = [];
   private timerId;
@@ -102,18 +103,15 @@ export class ParticleEmitter extends AbsoluteLayout {
     particle.height = SIZE;
     particle.borderRadius = SIZE / 2;
     particle.visibility = "hidden";
-    particle.backgroundColor = "blue";
     this.addChild(particle);
 
     return particle;
   }
 
-  prepareParticle(p: Particle, x: number, y: number) {
+  prepareParticle(p: Particle) {
     p.opacity = 1;
     p.scaleX = 1;
     p.scaleY = 1;
-    p.translateX = x;
-    p.translateY = y;
     p.visibility = "visible";
   }
 
@@ -145,7 +143,11 @@ export class ParticleEmitter extends AbsoluteLayout {
     const x = randRange(this.x - this.areaWidth / 2, this.x + this.areaWidth / 2) - SIZE / 2;
     const y = randRange(this.y - this.areaHeight / 2, this.y + this.areaHeight / 2) - SIZE / 2;
 
-    this.prepareParticle(p, x, y);
+    this.prepareParticle(p);
+
+    p.translateX = x;
+    p.translateY = y;
+    p.backgroundColor = this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
 
     const vel = randRange(this.velocity - this.velocityVariation, this.velocity + this.velocityVariation);
     const angle = randRange(this.emitDirection - this.emitDirectionVariation, this.emitDirection + this.emitDirectionVariation);
@@ -357,3 +359,13 @@ export const emitDirectionVariationProperty = new Property<ParticleEmitter, numb
 });
 emitDirectionVariationProperty.register(ParticleEmitter);
 
+function colorPaletteConverter(value: string): Color[] {
+  return value.split(",").map(v => new Color(v.trim()));
+}
+export const colorPaletteProperty = new Property<ParticleEmitter, Color[]>({
+  name: "colorPalette",
+  defaultValue: [new Color("blue")],
+  valueConverter: colorPaletteConverter,
+  valueChanged: update
+});
+colorPaletteProperty.register(ParticleEmitter);
