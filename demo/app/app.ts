@@ -10,6 +10,12 @@ import { enable , setCategories, categories, addCategories} from "tns-core-modul
 // addCategories(categories.NativeLifecycle);
 // addCategories(categories.Layout);
 // enable();
+const round = (value) => {
+    return (typeof value === "number") ? Math.floor(value) : value;
+};
+
+app.getResources().round = round;
+
 
 app.run({ moduleName: "app-root" });
 

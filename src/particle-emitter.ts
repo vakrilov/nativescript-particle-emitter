@@ -17,21 +17,23 @@ function log(...args) {
 export class ParticleEmitter extends AbsoluteLayout {
   public isEmitting: boolean = false;
 
-  public x: number;
-  public y: number;
-  public interval: number;
-  public areaWidth: number;
-  public areaHeight: number;
-  public duration: number;
-  public emitBatch: number;
-  public showDebugElement: boolean;
+  public emitOriginX: number;
+  public emitOriginY: number;
+  public emitOriginWidth: number;
+  public emitOriginHeight: number;
 
-  public velocity: number;
-  public velocityVariation: number;
-  public emitDirection: number;
-  public emitDirectionVariation: number;
+  public emitInterval: number;
+  public emitCount: number;
+  public particleDuration: number;
+
+  public emitDistance: number;
+  public emitDistanceVariation: number;
+  public emitAngle: number;
+  public emitAngleVariation: number;
 
   public colorPalette: Color[];
+
+  public showDebug: boolean;
 
   private particlePool: Particle[] = [];
   private timerId;
@@ -123,13 +125,13 @@ export class ParticleEmitter extends AbsoluteLayout {
     const p = this.getParticle();
 
     // Get origin coordinates in the box
-    const x = randRange(this.x - this.areaWidth / 2, this.x + this.areaWidth / 2) - SIZE / 2;
-    const y = randRange(this.y - this.areaHeight / 2, this.y + this.areaHeight / 2) - SIZE / 2;
-    const vel = randRange(this.velocity - this.velocityVariation, this.velocity + this.velocityVariation);
-    const angle = randRange(this.emitDirection - this.emitDirectionVariation, this.emitDirection + this.emitDirectionVariation);
+    const x = randRange(this.emitOriginX - this.emitOriginWidth / 2, this.emitOriginX + this.emitOriginWidth / 2) - SIZE / 2;
+    const y = randRange(this.emitOriginY - this.emitOriginHeight / 2, this.emitOriginY + this.emitOriginHeight / 2) - SIZE / 2;
+    const distance = randRange(this.emitDistance - this.emitDistanceVariation, this.emitDistance + this.emitDistanceVariation);
+    const angle = randRange(this.emitAngle - this.emitAngleVariation, this.emitAngle + this.emitAngleVariation);
     const angleRad = angle / 180 * Math.PI;
-    const dx = x + Math.cos(angleRad) * vel;
-    const dy = y - Math.sin(angleRad) * vel;
+    const dx = x + Math.cos(angleRad) * distance;
+    const dy = y - Math.sin(angleRad) * distance;
 
     p.opacity = 1;
     p.translateX = x;
@@ -143,7 +145,7 @@ export class ParticleEmitter extends AbsoluteLayout {
       translate: { x: dx, y: dy },
       scale: { x: 1, y: 1 },
       opacity: 0,
-      duration: this.duration,
+      duration: this.particleDuration,
       curve: CURVE,
     }).then(() => {
       this.releaseParticle(p);
@@ -152,10 +154,10 @@ export class ParticleEmitter extends AbsoluteLayout {
 
   private start() {
     this.timerId = setInterval(() => {
-      for (let i = 0; i < this.emitBatch; i++) {
+      for (let i = 0; i < this.emitCount; i++) {
         this.emitParticle();
       }
-    }, this.interval);
+    }, this.emitInterval);
     log("Emitter -> started");
   }
 
@@ -169,7 +171,7 @@ export class ParticleEmitter extends AbsoluteLayout {
     this.isEmitting ? this.start() : this.stop();
   }
 
-  public intervalChanged() {
+  public emitIntervalChanged() {
     if (this.isEmitting) {
       this.stop();
       this.start();
@@ -179,47 +181,47 @@ export class ParticleEmitter extends AbsoluteLayout {
   updateDebugElements() {
     this.updateDE(
       this.emitBoxDebug,
-      this.x - this.areaWidth / 2 - 1,
-      this.y - this.areaHeight / 2 - 1,
-      this.areaWidth + 2,
-      this.areaHeight + 2
+      this.emitOriginX - this.emitOriginWidth / 2 - 1,
+      this.emitOriginY - this.emitOriginHeight / 2 - 1,
+      this.emitOriginWidth + 2,
+      this.emitOriginHeight + 2
     );
 
     this.updateDE(
       this.emitDirectionMinDebug,
-      this.x,
-      this.y,
-      this.velocity - this.velocityVariation,
+      this.emitOriginX,
+      this.emitOriginY,
+      this.emitDistance - this.emitDistanceVariation,
       1,
-      -this.emitDirection);
+      -this.emitAngle);
 
     this.updateDE(
       this.emitDirectionMaxDebug,
-      this.x,
-      this.y,
-      this.velocity + this.velocityVariation,
+      this.emitOriginX,
+      this.emitOriginY,
+      this.emitDistance + this.emitDistanceVariation,
       1,
-      -this.emitDirection);
+      -this.emitAngle);
 
     this.updateDE(
       this.emitAngleStartDebug,
-      this.x,
-      this.y,
-      this.velocity,
+      this.emitOriginX,
+      this.emitOriginY,
+      this.emitDistance,
       1,
-      -this.emitDirection - this.emitDirectionVariation);
+      -this.emitAngle - this.emitAngleVariation);
 
     this.updateDE(
       this.emitAngleEndDebug,
-      this.x,
-      this.y,
-      this.velocity,
+      this.emitOriginX,
+      this.emitOriginY,
+      this.emitDistance,
       1,
-      -this.emitDirection + this.emitDirectionVariation);
+      -this.emitAngle + this.emitAngleVariation);
   }
 
   private updateDE(de: View, left: number, top: number, width: number, height: number, rotate: number = 0) {
-    if (this.showDebugElement) {
+    if (this.showDebug) {
       de.visibility = "visible";
       de.left = left;
       de.top = top;
@@ -247,101 +249,100 @@ export const isEmittingProperty = new Property<ParticleEmitter, boolean>({
 });
 isEmittingProperty.register(ParticleEmitter);
 
-export const emitBatchProperty = new Property<ParticleEmitter, number>({
-  name: "emitBatch",
+export const emitOriginXProperty = new Property<ParticleEmitter, number>({
+  name: "emitOriginX",
+  defaultValue: 0,
+  valueConverter: parseFloat,
+  valueChanged: updateDebugElements
+});
+emitOriginXProperty.register(ParticleEmitter);
+
+export const emitOriginYProperty = new Property<ParticleEmitter, number>({
+  name: "emitOriginY",
+  defaultValue: 0,
+  valueConverter: parseFloat,
+  valueChanged: updateDebugElements
+});
+emitOriginYProperty.register(ParticleEmitter);
+
+export const emitOriginWidthProperty = new Property<ParticleEmitter, number>({
+  name: "emitOriginWidth",
+  defaultValue: 20,
+  valueConverter: parseFloat,
+  valueChanged: updateDebugElements
+});
+emitOriginWidthProperty.register(ParticleEmitter);
+
+export const emitOriginHeightProperty = new Property<ParticleEmitter, number>({
+  name: "emitOriginHeight",
+  defaultValue: 20,
+  valueConverter: parseFloat,
+  valueChanged: updateDebugElements
+});
+emitOriginHeightProperty.register(ParticleEmitter);
+
+export const emitCountProperty = new Property<ParticleEmitter, number>({
+  name: "emitCount",
   defaultValue: 1,
   valueConverter: parseInt
 });
-emitBatchProperty.register(ParticleEmitter);
+emitCountProperty.register(ParticleEmitter);
 
-export const intervalProperty = new Property<ParticleEmitter, number>({
-  name: "interval",
+export const emitIntervalProperty = new Property<ParticleEmitter, number>({
+  name: "emitInterval",
   defaultValue: 50,
   valueConverter: parseInt,
-  valueChanged: (pe) => pe.intervalChanged()
+  valueChanged: (pe) => pe.emitIntervalChanged()
 });
-intervalProperty.register(ParticleEmitter);
+emitIntervalProperty.register(ParticleEmitter);
 
-export const xProperty = new Property<ParticleEmitter, number>({
-  name: "x",
-  defaultValue: 0,
-  valueConverter: parseFloat,
-  valueChanged: updateDebugElements
-});
-xProperty.register(ParticleEmitter);
-
-export const yProperty = new Property<ParticleEmitter, number>({
-  name: "y",
-  defaultValue: 0,
-  valueConverter: parseFloat,
-  valueChanged: updateDebugElements
-});
-yProperty.register(ParticleEmitter);
-
-
-export const areaWidthProperty = new Property<ParticleEmitter, number>({
-  name: "areaWidth",
-  defaultValue: 20,
-  valueConverter: parseFloat,
-  valueChanged: updateDebugElements
-});
-areaWidthProperty.register(ParticleEmitter);
-
-export const areaHeightProperty = new Property<ParticleEmitter, number>({
-  name: "areaHeight",
-  defaultValue: 20,
-  valueConverter: parseFloat,
-  valueChanged: updateDebugElements
-});
-areaHeightProperty.register(ParticleEmitter);
-
-export const showDebugElementProperty = new Property<ParticleEmitter, boolean>({
-  name: "showDebugElement",
-  defaultValue: false,
-  valueConverter: booleanConverter,
-  valueChanged: updateDebugElements
-});
-showDebugElementProperty.register(ParticleEmitter);
-
-export const durationProperty = new Property<ParticleEmitter, number>({
-  name: "duration",
+export const particleDurationProperty = new Property<ParticleEmitter, number>({
+  name: "particleDuration",
   defaultValue: 800,
   valueConverter: parseInt,
   valueChanged: updateDebugElements
 });
-durationProperty.register(ParticleEmitter);
+particleDurationProperty.register(ParticleEmitter);
 
-export const velocityProperty = new Property<ParticleEmitter, number>({
-  name: "velocity",
+export const showDebugProperty = new Property<ParticleEmitter, boolean>({
+  name: "showDebug",
+  defaultValue: false,
+  valueConverter: booleanConverter,
+  valueChanged: updateDebugElements
+});
+showDebugProperty.register(ParticleEmitter);
+
+export const emitDistanceProperty = new Property<ParticleEmitter, number>({
+  name: "emitDistance",
   defaultValue: 80,
   valueConverter: parseInt,
   valueChanged: updateDebugElements
 });
-velocityProperty.register(ParticleEmitter);
+emitDistanceProperty.register(ParticleEmitter);
 
-export const velocityVariationProperty = new Property<ParticleEmitter, number>({
-  name: "velocityVariation",
+export const emitDistanceVariationProperty = new Property<ParticleEmitter, number>({
+  name: "emitDistanceVariation",
   defaultValue: 40,
   valueConverter: parseInt,
   valueChanged: updateDebugElements
 });
-velocityVariationProperty.register(ParticleEmitter);
+emitDistanceVariationProperty.register(ParticleEmitter);
 
-export const emitDirectionProperty = new Property<ParticleEmitter, number>({
-  name: "emitDirection",
+export const emitAngleProperty = new Property<ParticleEmitter, number>({
+  name: "emitAngle",
   defaultValue: 90,
   valueConverter: parseInt,
   valueChanged: updateDebugElements
 });
-emitDirectionProperty.register(ParticleEmitter);
+emitAngleProperty.register(ParticleEmitter);
 
-export const emitDirectionVariationProperty = new Property<ParticleEmitter, number>({
-  name: "emitDirectionVariation",
+export const emitAngleVariationProperty = new Property<ParticleEmitter, number>({
+  name: "emitAngleVariation",
   defaultValue: 180,
   valueConverter: parseInt,
   valueChanged: updateDebugElements
 });
-emitDirectionVariationProperty.register(ParticleEmitter);
+emitAngleVariationProperty.register(ParticleEmitter);
 
 function colorPaletteConverter(value: string): Color[] {
   return value.split(",").map(v => new Color(v.trim()));

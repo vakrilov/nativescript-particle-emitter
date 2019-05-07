@@ -1,92 +1,79 @@
 <Page xmlns="http://schemas.nativescript.org/tns.xsd"
   class="page" loaded="onLoaded"
-  xmlns:pe="nativescript-particle-emitter">
-  <GridLayout class="p-20" columns="2* *" backgroundColor="lightgreen">
-    <StackLayout col="1">
+  actionBarHidden="true"
+  xmlns:pe="nativescript-particle-emitter" backgroundColor="lightgray">
+  <GridLayout  rows="auto auto *">
+
+    <StackLayout row="0" orientation="horizontal" class="p-12">
+      <Label text="emitting" class="option-label"/>
+      <Switch checked="{{ isEmitting }}" margin="0 4 0 10"/>
+
+      <Label text="debug" class="option-label"/>
+      <Switch checked="{{ showDebug }}" margin="0 4 0 10"/>
+
       <Button text="change colors" tap="selectNextPalette" />
-      <Button text="load test" tap="loadTest" />
-        
     </StackLayout>
 
-    <StackLayout verticalAlignment="top">
-      <StackLayout orientation="horizontal">
-        <Label text="emitting" />
-        <Switch checked="{{ isEmitting }}" />
-      </StackLayout>
+    <GridLayout row="1" columns="100 * 40" rows="auto auto auto auto auto auto auto auto auto" class="p-12">
+      <Label  row="0" col="0" class="option-label"  text="emit count" />
+      <Slider row="0" col="1" class="option-slider" minValue="1" maxValue="10" value="{{ emitCount }}"/>
+      <Label  row="0" col="2" class="option-value"  text="{{ emitCount | round }}"  />
 
-      <StackLayout orientation="horizontal">
-        <Label text="debug" textWrap="true" />
-        <Switch checked="{{ showDebugElement }}" />
-      </StackLayout>
+      <Label  row="1" col="0" class="option-label"  text="emit interval" />
+      <Slider row="1" col="1" class="option-slider" minValue="20" maxValue="500" value="{{ emitInterval }}"/>
+      <Label  row="1" col="2" class="option-value"  text="{{ emitInterval | round }}"  />
 
-      <StackLayout orientation="horizontal">
-        <Label text="duration" />
-        <Slider minValue="300" maxValue="1500" value="{{ duration }}" width="100" />
-      </StackLayout>
+      <Label  row="2" col="0" class="option-label"  text="duration" />
+      <Slider row="2" col="1" class="option-slider" minValue="300" maxValue="1500" value="{{ particleDuration }}"/>
+      <Label  row="2" col="2" class="option-value"  text="{{ particleDuration | round }}"  />
 
-      <StackLayout orientation="horizontal">
-        <Label text="areaWidth" />
-        <Slider minValue="1" maxValue="200" value="{{ areaWidth }}" width="100" />
-      </StackLayout>
-      
-      <StackLayout orientation="horizontal">
-        <Label text="areaHeight" />
-        <Slider minValue="1" maxValue="200" value="{{ areaHeight }}" width="100"/>
-      </StackLayout>
+      <Label  row="3" col="0" class="option-label"  text="distance" />
+      <Slider row="3" col="1" class="option-slider" minValue="0" maxValue="200" value="{{ emitDistance }}"/>
+      <Label  row="3" col="2" class="option-value"  text="{{ emitDistance | round }}"  />
 
-      <StackLayout orientation="horizontal">
-        <Label text="emitBatch" />
-        <Slider minValue="1" maxValue="5" value="{{ emitBatch }}" width="100"/>
-      </StackLayout>
+      <Label  row="4" col="0" class="option-label"  text="distance var" />
+      <Slider row="4" col="1" class="option-slider" minValue="0" maxValue="100" value="{{ emitDistanceVariation }}"/>
+      <Label  row="4" col="2" class="option-value"  text="{{ emitDistanceVariation | round }}"  />
 
-      <StackLayout orientation="horizontal">
-        <Label text="interval" />
-        <Slider minValue="30" maxValue="500" value="{{ interval }}" width="100"/>
-      </StackLayout>
+      <Label  row="5" col="0" class="option-label"  text="angle" />
+      <Slider row="5" col="1" class="option-slider" minValue="0" maxValue="360" value="{{ emitAngle }}"/>
+      <Label  row="5" col="2" class="option-value"  text="{{ emitAngle | round }}"  />
 
-      <StackLayout orientation="horizontal">
-        <Label text="velocity" />
-        <Slider minValue="20" maxValue="200" value="{{ velocity }}" width="100"/>
-      </StackLayout>
+      <Label  row="6" col="0" class="option-label"  text="angle var" />
+      <Slider row="6" col="1" class="option-slider" minValue="0" maxValue="180" value="{{ emitAngleVariation }}"/>
+      <Label  row="6" col="2" class="option-value"  text="{{ emitAngleVariation | round }}"  />
 
-      <StackLayout orientation="horizontal">
-        <Label text="velocityVariation" />
-        <Slider minValue="0" maxValue="50" value="{{ velocityVariation }}" width="100"/>
-      </StackLayout>
+      <Label  row="7" col="0" class="option-label"  text="box width" />
+      <Slider row="7" col="1" class="option-slider" minValue="1" maxValue="300" value="{{ emitOriginWidth }}"/>
+      <Label  row="7" col="2" class="option-value"  text="{{ emitOriginWidth | round }}"  />
 
-      <StackLayout orientation="horizontal">
-        <Label text="emitDirection" />
-        <Slider minValue="0" maxValue="360" value="{{ emitDirection }}" width="100"/>
-      </StackLayout>
+      <Label  row="8" col="0" class="option-label"  text="box height" />
+      <Slider row="8" col="1" class="option-slider" minValue="1" maxValue="300" value="{{ emitOriginHeight }}"/>
+      <Label  row="8" col="2" class="option-value"  text="{{ emitOriginHeight | round }}"  />
+    </GridLayout>
 
-      <StackLayout orientation="horizontal">
-        <Label text="emitDirectionVariation" />
-        <Slider minValue="0" maxValue="180" value="{{ emitDirectionVariation }}" width="100"/>
-      </StackLayout>
-
-      
-    </StackLayout>
-
-
-    <pe:ParticleEmitter id="pe" backgroundColor="white" colSpan="2"
-      verticalAlignment="bottom"
-      margin="10" height="300" width="100%" 
-      touch="onTouch" showDebugElement="{{ showDebugElement }}"
+    <pe:ParticleEmitter
+      backgroundColor="white" 
+      margin="10 0 0 0"
+      row="2"
+      touch="onTouch" 
       isEmitting="{{ isEmitting }}"
-      x="{{x}}" y="{{y}}" 
-      duration="{{ duration }}"
-      areaWidth="{{ areaWidth }}"
-      areaHeight="{{ areaHeight }}"
-      emitBatch="{{ emitBatch }}" 
-      interval="{{ interval }}"  
-      velocity="{{ velocity }}"  
-      velocityVariation="{{ velocityVariation }}"  
-      emitDirection="{{ emitDirection }}"  
-      emitDirectionVariation="{{ emitDirectionVariation }}" 
+      showDebug="{{ showDebug }}"
+      emitOriginX="{{ emitOriginX }}"
+      emitOriginY="{{ emitOriginY }}" 
+      emitOriginWidth="{{ emitOriginWidth }}"
+      emitOriginHeight="{{ emitOriginHeight }}"
+      particleDuration="{{ particleDuration }}"
+      emitCount="{{ emitCount }}" 
+      emitInterval="{{ emitInterval }}"  
+      emitDistance="{{ emitDistance }}"  
+      emitDistanceVariation="{{ emitDistanceVariation }}"  
+      emitAngle="{{ emitAngle }}"  
+      emitAngleVariation="{{ emitAngleVariation }}" 
       colorPalette="{{ colorPalette }}"
       />
 
-    <StackLayout horizontalAlignment="right" verticalAlignment="bottom" tap="resetFps" margin="10">
+    <StackLayout horizontalAlignment="right" verticalAlignment="bottom" row="2" tap="resetFps" margin="10">
         <Label text="{{ fps }}" fontSize="10" />
         <Label text="{{ minfps }}" fontSize="10" />
     </StackLayout>

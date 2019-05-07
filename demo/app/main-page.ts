@@ -22,20 +22,22 @@ export function onLoaded(args) {
 
     page.bindingContext = new Observable();
 
-    page.bindingContext.set("x", 100);
-    page.bindingContext.set("y", 200);
     page.bindingContext.set("isEmitting", false);
-    page.bindingContext.set("showDebugElement", true);
-    page.bindingContext.set("areaWidth", 1);
-    page.bindingContext.set("areaHeight", 1);
-    page.bindingContext.set("emitBatch", 1);
-    page.bindingContext.set("duration", 1000);
-    page.bindingContext.set("interval", 50);
+    page.bindingContext.set("showDebug", true);
 
-    page.bindingContext.set("velocity", 80);
-    page.bindingContext.set("velocityVariation", 40);
-    page.bindingContext.set("emitDirection", 0);
-    page.bindingContext.set("emitDirectionVariation", 180);
+    page.bindingContext.set("emitOriginX", 150);
+    page.bindingContext.set("emitOriginY", 20);
+    page.bindingContext.set("emitOriginWidth", 1);
+    page.bindingContext.set("emitOriginHeight", 1);
+
+    page.bindingContext.set("emitInterval", 50);
+    page.bindingContext.set("emitCount", 5);
+    page.bindingContext.set("particleDuration", 1000);
+
+    page.bindingContext.set("emitDistance", 120);
+    page.bindingContext.set("emitDistanceVariation", 60);
+    page.bindingContext.set("emitAngle", 270);
+    page.bindingContext.set("emitAngleVariation", 30);
 
     selectNextPalette();
 
@@ -46,8 +48,6 @@ export function onLoaded(args) {
     startFps();
 }
 
-
-// Event handler for Page 'loaded' event attached in main-page.xml
 export function resetFps() {
     stopFps();
     startFps();
@@ -62,20 +62,20 @@ export function onTouch(args: TouchGestureEventData) {
     }
 
     if (tracking) {
-        page.bindingContext.set("x", args.getX());
-        page.bindingContext.set("y", args.getY());
+        page.bindingContext.set("emitOriginX", args.getX());
+        page.bindingContext.set("emitOriginY", args.getY());
     }
 }
 
 export function selectNextPalette() {
     paletteIndex = (paletteIndex + 1) % palettes.length;
-    page.bindingContext.set("colorPalette", palettes[paletteIndex])
+    page.bindingContext.set("colorPalette", palettes[paletteIndex]);
 }
 
 export function loadTest() {
-    page.bindingContext.set("interval", 30);
-    page.bindingContext.set("emitBatch", 5);
-    page.bindingContext.set("duration", 1500);
+    page.bindingContext.set("emitInterval", 30);
+    page.bindingContext.set("emitCount", 5);
+    page.bindingContext.set("particleDuration", 1500);
     page.bindingContext.set("showDebugElement", false);
     page.bindingContext.set("isEmitting", true);
     setTimeout(resetFps, 2000);

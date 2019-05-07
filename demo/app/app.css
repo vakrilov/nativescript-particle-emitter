@@ -1,1 +1,17 @@
 ﻿@import '~nativescript-theme-core/css/core.light.css';
+
+.preset-btn {
+    
+}
+
+.option-label {
+    vertical-align: middle;
+}
+
+.option-slider {
+    margin: 0 10;
+}
+
+.option-value {
+    vertical-align: middle;
+}
