@@ -95,20 +95,10 @@ export class ParticleEmitter extends AbsoluteLayout {
     log("createParticle");
 
     const particle = new Particle();
-    // particle.width = SIZE;
-    // particle.height = SIZE;
-    // particle.borderRadius = SIZE / 2;
-    // particle.visibility = "hidden";
+
     this.addChild(particle);
 
     return particle;
-  }
-
-  prepareParticle(p: Particle) {
-    p.opacity = 1;
-    p.scaleX = 1;
-    p.scaleY = 1;
-    // p.visibility = "visible";
   }
 
   getParticle(): Particle {
@@ -122,16 +112,11 @@ export class ParticleEmitter extends AbsoluteLayout {
   }
 
   releaseParticle(p: Particle) {
+    log("releaseParticle");
+
     p.hide();
 
-    // p.visibility = "hidden";
-
-    // setTimeout(() => {
-      log("releaseParticle");
-
-      this.particlePool.push(p);
-    // }, 5);
-
+    this.particlePool.push(p);
   }
 
   public emitParticle() {
@@ -140,21 +125,18 @@ export class ParticleEmitter extends AbsoluteLayout {
     // Get origin coordinates in the box
     const x = randRange(this.x - this.areaWidth / 2, this.x + this.areaWidth / 2) - SIZE / 2;
     const y = randRange(this.y - this.areaHeight / 2, this.y + this.areaHeight / 2) - SIZE / 2;
-
-    this.prepareParticle(p);
-
-    p.translateX = x;
-    p.translateY = y;
-    p.scaleX = 0.2;
-    p.scaleY = 0.2;
-    p.backgroundColor = this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
-
     const vel = randRange(this.velocity - this.velocityVariation, this.velocity + this.velocityVariation);
     const angle = randRange(this.emitDirection - this.emitDirectionVariation, this.emitDirection + this.emitDirectionVariation);
     const angleRad = angle / 180 * Math.PI;
     const dx = x + Math.cos(angleRad) * vel;
     const dy = y - Math.sin(angleRad) * vel;
 
+    p.opacity = 1;
+    p.translateX = x;
+    p.translateY = y;
+    p.scaleX = 0.2;
+    p.scaleY = 0.2;
+    p.backgroundColor = this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
     p.show();
 
     p.animate({
@@ -253,7 +235,7 @@ function randRange(min: number, max: number) {
   return min + Math.random() * (max - min);
 }
 
-function update(pe: ParticleEmitter, newValue: any, oldValue: any) {
+function updateDebugElements(pe: ParticleEmitter, newValue: any, oldValue: any) {
   pe.updateDebugElements();
 }
 
@@ -284,7 +266,7 @@ export const xProperty = new Property<ParticleEmitter, number>({
   name: "x",
   defaultValue: 0,
   valueConverter: parseFloat,
-  valueChanged: update
+  valueChanged: updateDebugElements
 });
 xProperty.register(ParticleEmitter);
 
@@ -292,7 +274,7 @@ export const yProperty = new Property<ParticleEmitter, number>({
   name: "y",
   defaultValue: 0,
   valueConverter: parseFloat,
-  valueChanged: update
+  valueChanged: updateDebugElements
 });
 yProperty.register(ParticleEmitter);
 
@@ -301,7 +283,7 @@ export const areaWidthProperty = new Property<ParticleEmitter, number>({
   name: "areaWidth",
   defaultValue: 20,
   valueConverter: parseFloat,
-  valueChanged: update
+  valueChanged: updateDebugElements
 });
 areaWidthProperty.register(ParticleEmitter);
 
@@ -309,7 +291,7 @@ export const areaHeightProperty = new Property<ParticleEmitter, number>({
   name: "areaHeight",
   defaultValue: 20,
   valueConverter: parseFloat,
-  valueChanged: update
+  valueChanged: updateDebugElements
 });
 areaHeightProperty.register(ParticleEmitter);
 
@@ -317,7 +299,7 @@ export const showDebugElementProperty = new Property<ParticleEmitter, boolean>({
   name: "showDebugElement",
   defaultValue: false,
   valueConverter: booleanConverter,
-  valueChanged: update
+  valueChanged: updateDebugElements
 });
 showDebugElementProperty.register(ParticleEmitter);
 
@@ -325,7 +307,7 @@ export const durationProperty = new Property<ParticleEmitter, number>({
   name: "duration",
   defaultValue: 800,
   valueConverter: parseInt,
-  valueChanged: update
+  valueChanged: updateDebugElements
 });
 durationProperty.register(ParticleEmitter);
 
@@ -333,7 +315,7 @@ export const velocityProperty = new Property<ParticleEmitter, number>({
   name: "velocity",
   defaultValue: 80,
   valueConverter: parseInt,
-  valueChanged: update
+  valueChanged: updateDebugElements
 });
 velocityProperty.register(ParticleEmitter);
 
@@ -341,7 +323,7 @@ export const velocityVariationProperty = new Property<ParticleEmitter, number>({
   name: "velocityVariation",
   defaultValue: 40,
   valueConverter: parseInt,
-  valueChanged: update
+  valueChanged: updateDebugElements
 });
 velocityVariationProperty.register(ParticleEmitter);
 
@@ -349,7 +331,7 @@ export const emitDirectionProperty = new Property<ParticleEmitter, number>({
   name: "emitDirection",
   defaultValue: 90,
   valueConverter: parseInt,
-  valueChanged: update
+  valueChanged: updateDebugElements
 });
 emitDirectionProperty.register(ParticleEmitter);
 
@@ -357,7 +339,7 @@ export const emitDirectionVariationProperty = new Property<ParticleEmitter, numb
   name: "emitDirectionVariation",
   defaultValue: 180,
   valueConverter: parseInt,
-  valueChanged: update
+  valueChanged: updateDebugElements
 });
 emitDirectionVariationProperty.register(ParticleEmitter);
 
@@ -368,6 +350,6 @@ export const colorPaletteProperty = new Property<ParticleEmitter, Color[]>({
   name: "colorPalette",
   defaultValue: [new Color("blue")],
   valueConverter: colorPaletteConverter,
-  valueChanged: update
+  valueChanged: updateDebugElements
 });
 colorPaletteProperty.register(ParticleEmitter);
