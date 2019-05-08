@@ -38,8 +38,8 @@
         "iOS"
     ],
     "author": {
-        "name": "Your Name",
-        "email": "youremail@yourdomain.com"
+        "name": "Alexander Vakrilov",
+        "email": "alexander.vakrilov@progress.com"
     },
     "bugs": {
         "url": "https://github.com/vakrilov/nativescript-particle-emitter/issues"

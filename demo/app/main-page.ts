@@ -103,7 +103,7 @@ export function partyPreset() {
     context.set("particleDuration", 1500);
 
     context.set("emitOriginX", 188);
-    context.set("emitOriginY", 300);
+    context.set("emitOriginY", 240);
     context.set("emitOriginWidth", 1);
     context.set("emitOriginHeight", 1);
 
@@ -121,7 +121,7 @@ export function bubblesPreset() {
     context.set("particleDuration", 600);
 
     context.set("emitOriginX", 188);
-    context.set("emitOriginY", 188);
+    context.set("emitOriginY", 120);
     context.set("emitOriginWidth", 150);
     context.set("emitOriginHeight", 150);
 

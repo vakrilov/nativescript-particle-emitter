@@ -11,7 +11,7 @@
       <Label text="debug" class="option-label"/>
       <Switch checked="{{ showDebug }}" margin="0 4 0 10"/>
 
-      <Button text="change colors" tap="selectNextPalette" />
+      <Button text="change colors" textWrap="true" tap="selectNextPalette" android:fontSize="12"/>
     </StackLayout>
 
     <GridLayout row="1" columns="100 * 40" rows="auto auto auto auto auto auto auto auto auto" class="p-12">
@@ -52,12 +52,12 @@
       <Label  row="8" col="2" class="option-value"  text="{{ emitOriginHeight | round }}"  />
     </GridLayout>
 
-    <WrapLayout orientation="horizontal" itemWidth="70" itemHeight="30" row="2" horizontalAlignment="center">
-        <Button text="initial" tap="initialPreset" />
-        <Button text="rain" tap="rainPreset" />
-        <Button text="party" tap="partyPreset" />
-        <Button text="bubbles" tap="bubblesPreset" />
-        <Button text="rocket" tap="rocketPreset" />
+    <WrapLayout row="2" horizontalAlignment="center" android:itemWidth="70" >
+        <Button text="initial" tap="initialPreset" android:fontSize="12"/>
+        <Button text="rain" tap="rainPreset" android:fontSize="12"/>
+        <Button text="party" tap="partyPreset" android:fontSize="12"/>
+        <Button text="bubbles" tap="bubblesPreset" android:fontSize="12"/>
+        <Button text="rocket" tap="rocketPreset" android:fontSize="12"/>
     </WrapLayout>
 
     <pe:ParticleEmitter

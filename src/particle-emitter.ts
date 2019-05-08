@@ -267,7 +267,7 @@ emitOriginYProperty.register(ParticleEmitter);
 
 export const emitOriginWidthProperty = new Property<ParticleEmitter, number>({
   name: "emitOriginWidth",
-  defaultValue: 20,
+  defaultValue: 1,
   valueConverter: parseFloat,
   valueChanged: updateDebugElements
 });
@@ -275,7 +275,7 @@ emitOriginWidthProperty.register(ParticleEmitter);
 
 export const emitOriginHeightProperty = new Property<ParticleEmitter, number>({
   name: "emitOriginHeight",
-  defaultValue: 20,
+  defaultValue: 1,
   valueConverter: parseFloat,
   valueChanged: updateDebugElements
 });
@@ -283,7 +283,7 @@ emitOriginHeightProperty.register(ParticleEmitter);
 
 export const emitCountProperty = new Property<ParticleEmitter, number>({
   name: "emitCount",
-  defaultValue: 1,
+  defaultValue: 5,
   valueConverter: parseInt
 });
 emitCountProperty.register(ParticleEmitter);
@@ -330,7 +330,7 @@ emitDistanceVariationProperty.register(ParticleEmitter);
 
 export const emitAngleProperty = new Property<ParticleEmitter, number>({
   name: "emitAngle",
-  defaultValue: 90,
+  defaultValue: 0,
   valueConverter: parseInt,
   valueChanged: updateDebugElements
 });
