@@ -2,9 +2,9 @@
   class="page" loaded="onLoaded"
   actionBarHidden="true"
   xmlns:pe="nativescript-particle-emitter" backgroundColor="lightgray">
-  <GridLayout  rows="auto auto *">
+  <GridLayout rows="auto auto auto *">
 
-    <StackLayout row="0" orientation="horizontal" class="p-12">
+    <StackLayout row="0" orientation="horizontal" class="p-x-12">
       <Label text="emitting" class="option-label"/>
       <Switch checked="{{ isEmitting }}" margin="0 4 0 10"/>
 
@@ -52,10 +52,18 @@
       <Label  row="8" col="2" class="option-value"  text="{{ emitOriginHeight | round }}"  />
     </GridLayout>
 
+    <WrapLayout orientation="horizontal" itemWidth="70" itemHeight="30" row="2" horizontalAlignment="center">
+        <Button text="initial" tap="initialPreset" />
+        <Button text="rain" tap="rainPreset" />
+        <Button text="party" tap="partyPreset" />
+        <Button text="bubbles" tap="bubblesPreset" />
+        <Button text="rocket" tap="rocketPreset" />
+    </WrapLayout>
+
     <pe:ParticleEmitter
       backgroundColor="white" 
       margin="10 0 0 0"
-      row="2"
+      row="3"
       touch="onTouch" 
       isEmitting="{{ isEmitting }}"
       showDebug="{{ showDebug }}"
@@ -73,7 +81,7 @@
       colorPalette="{{ colorPalette }}"
       />
 
-    <StackLayout horizontalAlignment="right" verticalAlignment="bottom" row="2" tap="resetFps" margin="10">
+    <StackLayout horizontalAlignment="right" verticalAlignment="bottom" row="3" tap="resetFps" margin="10">
         <Label text="{{ fps }}" fontSize="10" />
         <Label text="{{ minfps }}" fontSize="10" />
     </StackLayout>

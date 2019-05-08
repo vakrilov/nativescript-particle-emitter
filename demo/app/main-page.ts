@@ -16,36 +16,25 @@ const palettes = [
     [new Color("red"), new Color("green"), new Color("blue")],
 ];
 
-let page: Page;
+let context: Observable;
 export function onLoaded(args) {
-    page = <Page>args.object.page;
+    const page = <Page>args.object.page;
 
-    page.bindingContext = new Observable();
+    context = new Observable();
 
-    page.bindingContext.set("isEmitting", false);
-    page.bindingContext.set("showDebug", true);
+    initialPreset();
 
-    page.bindingContext.set("emitOriginX", 150);
-    page.bindingContext.set("emitOriginY", 20);
-    page.bindingContext.set("emitOriginWidth", 1);
-    page.bindingContext.set("emitOriginHeight", 1);
-
-    page.bindingContext.set("emitInterval", 50);
-    page.bindingContext.set("emitCount", 5);
-    page.bindingContext.set("particleDuration", 1000);
-
-    page.bindingContext.set("emitDistance", 120);
-    page.bindingContext.set("emitDistanceVariation", 60);
-    page.bindingContext.set("emitAngle", 270);
-    page.bindingContext.set("emitAngleVariation", 30);
-
-    selectNextPalette();
+    context.set("isEmitting", true);
+    context.set("showDebug", true);
 
     addCallback((fps, minFps) => {
-        page.bindingContext.set("fps", "FPS: " + fps.toFixed(2));
-        page.bindingContext.set("minfps", "Min FPS: " + minFps.toFixed(2));
+        context.set("fps", "FPS: " + fps.toFixed(2));
+        context.set("minfps", "Min FPS: " + minFps.toFixed(2));
     });
-    startFps();
+
+    setTimeout(resetFps, 1000);
+
+    (<Page>args.object.page).bindingContext = context;
 }
 
 export function resetFps() {
@@ -62,21 +51,102 @@ export function onTouch(args: TouchGestureEventData) {
     }
 
     if (tracking) {
-        page.bindingContext.set("emitOriginX", args.getX());
-        page.bindingContext.set("emitOriginY", args.getY());
+        context.set("emitOriginX", args.getX());
+        context.set("emitOriginY", args.getY());
     }
 }
 
 export function selectNextPalette() {
     paletteIndex = (paletteIndex + 1) % palettes.length;
-    page.bindingContext.set("colorPalette", palettes[paletteIndex]);
+    context.set("colorPalette", palettes[paletteIndex]);
 }
 
-export function loadTest() {
-    page.bindingContext.set("emitInterval", 30);
-    page.bindingContext.set("emitCount", 5);
-    page.bindingContext.set("particleDuration", 1500);
-    page.bindingContext.set("showDebugElement", false);
-    page.bindingContext.set("isEmitting", true);
-    setTimeout(resetFps, 2000);
+export function initialPreset() {
+    context.set("emitOriginX", 188);
+    context.set("emitOriginY", 20);
+    context.set("emitOriginWidth", 1);
+    context.set("emitOriginHeight", 1);
+
+    context.set("emitInterval", 50);
+    context.set("emitCount", 5);
+    context.set("particleDuration", 1000);
+
+    context.set("emitDistance", 120);
+    context.set("emitDistanceVariation", 60);
+    context.set("emitAngle", 270);
+    context.set("emitAngleVariation", 30);
+
+    context.set("colorPalette", palettes[0]);
+}
+
+export function rainPreset() {
+    context.set("emitCount", 8);
+    context.set("emitInterval", 50);
+    context.set("particleDuration", 1200);
+
+    context.set("emitOriginX", 188);
+    context.set("emitOriginY", 0);
+    context.set("emitOriginWidth", 300);
+    context.set("emitOriginHeight", 1);
+
+    context.set("emitDistance", 130);
+    context.set("emitDistanceVariation", 15);
+    context.set("emitAngle", 270);
+    context.set("emitAngleVariation", 0);
+
+    context.set("colorPalette", palettes[1]);
+}
+
+export function partyPreset() {
+    context.set("emitCount", 5);
+    context.set("emitInterval", 50);
+    context.set("particleDuration", 1500);
+
+    context.set("emitOriginX", 188);
+    context.set("emitOriginY", 300);
+    context.set("emitOriginWidth", 1);
+    context.set("emitOriginHeight", 1);
+
+    context.set("emitDistance", 200);
+    context.set("emitDistanceVariation", 45);
+    context.set("emitAngle", 90);
+    context.set("emitAngleVariation", 45);
+
+    context.set("colorPalette", palettes[4]);
+}
+
+export function bubblesPreset() {
+    context.set("emitCount", 6);
+    context.set("emitInterval", 50);
+    context.set("particleDuration", 600);
+
+    context.set("emitOriginX", 188);
+    context.set("emitOriginY", 188);
+    context.set("emitOriginWidth", 150);
+    context.set("emitOriginHeight", 150);
+
+    context.set("emitDistance", 0);
+    context.set("emitDistanceVariation", 0);
+    context.set("emitAngle", 0);
+    context.set("emitAngleVariation", 0);
+
+    context.set("colorPalette", palettes[0]);
+}
+
+export function rocketPreset() {
+    context.set("emitCount", 3);
+    context.set("emitInterval", 20);
+    context.set("particleDuration", 1000);
+
+    context.set("emitOriginX", 188);
+    context.set("emitOriginY", 188);
+    context.set("emitOriginWidth", 1);
+    context.set("emitOriginHeight", 1);
+
+    context.set("emitDistance", 130);
+    context.set("emitDistanceVariation", 15);
+    context.set("emitAngle", 270);
+    context.set("emitAngleVariation", 8);
+
+    context.set("colorPalette", palettes[2]);
 }
