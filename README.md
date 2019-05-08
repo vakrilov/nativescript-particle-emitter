@@ -4,6 +4,8 @@
 
 Particle emitter component for NativeScript.
 
+![demo gif](https://media.giphy.com/media/KEkN5nXA79XJfG4QFQ/giphy.gif)
+
 ## Installation
 
 Describe your plugin installation steps. Ideally it would be something like:

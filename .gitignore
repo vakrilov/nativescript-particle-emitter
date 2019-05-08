@@ -5,8 +5,10 @@
 *.js
 *.js.map
 *.log
+*.tgz
 src/*.d.ts
 !src/index.d.ts
+!src/particle.d.ts
 !src/references.d.ts
 !src/scripts/*.js
 !seed-tests/*.js
