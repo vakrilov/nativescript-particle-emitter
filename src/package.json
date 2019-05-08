@@ -1,6 +1,6 @@
 {
     "name": "nativescript-particle-emitter",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Your awesome NativeScript plugin.",
     "main": "particle-emitter",
     "typings": "index.d.ts",
